@@ -20,7 +20,7 @@ async function main() {
     data: {
       name: "Boda de Ana & Luis",
       type: "BODA",
-      date: new Date("2026-11-14T17:00:00-06:00"),
+      date: new Date("2026-11-14T17:00:00"),
       location: "Salón Jardín Las Palmas",
       hostName: "Ana Torres",
       totalBudget: 180000,
@@ -163,7 +163,7 @@ async function main() {
     data: [
       {
         eventId: boda.id,
-        time: new Date("2026-11-14T17:00:00-06:00"),
+        time: new Date("2026-11-14T17:00:00"),
         activity: "Ceremonia religiosa",
         responsible: "Maestro de ceremonias",
         durationMinutes: 45,
@@ -171,7 +171,7 @@ async function main() {
       },
       {
         eventId: boda.id,
-        time: new Date("2026-11-14T18:00:00-06:00"),
+        time: new Date("2026-11-14T18:00:00"),
         activity: "Cóctel de bienvenida",
         responsible: "Staff banquetes",
         durationMinutes: 60,
@@ -179,7 +179,7 @@ async function main() {
       },
       {
         eventId: boda.id,
-        time: new Date("2026-11-14T19:00:00-06:00"),
+        time: new Date("2026-11-14T19:00:00"),
         activity: "Entrada a salón",
         responsible: "DJ Fede",
         durationMinutes: 15,
@@ -187,7 +187,7 @@ async function main() {
       },
       {
         eventId: boda.id,
-        time: new Date("2026-11-14T19:30:00-06:00"),
+        time: new Date("2026-11-14T19:30:00"),
         activity: "Cena",
         responsible: "Staff banquetes",
         durationMinutes: 60,
@@ -195,7 +195,7 @@ async function main() {
       },
       {
         eventId: boda.id,
-        time: new Date("2026-11-14T21:00:00-06:00"),
+        time: new Date("2026-11-14T21:00:00"),
         activity: "Primer baile",
         responsible: "DJ Fede",
         durationMinutes: 10,
@@ -203,7 +203,7 @@ async function main() {
       },
       {
         eventId: boda.id,
-        time: new Date("2026-11-14T21:30:00-06:00"),
+        time: new Date("2026-11-14T21:30:00"),
         activity: "Pista abierta",
         responsible: "DJ Fede",
         durationMinutes: 180,
@@ -219,7 +219,7 @@ async function main() {
         moment: "Entrada de los novios",
         songName: "Perfect",
         artist: "Ed Sheeran",
-        time: new Date("2026-11-14T19:00:00-06:00"),
+        time: new Date("2026-11-14T19:00:00"),
         status: "CONFIRMADA",
         order: 1,
       },
@@ -228,7 +228,7 @@ async function main() {
         moment: "Primer baile",
         songName: "Thinking Out Loud",
         artist: "Ed Sheeran",
-        time: new Date("2026-11-14T21:00:00-06:00"),
+        time: new Date("2026-11-14T21:00:00"),
         status: "CONFIRMADA",
         order: 2,
       },
@@ -236,7 +236,7 @@ async function main() {
         eventId: boda.id,
         moment: "Hora loca",
         songName: "Playlist hora loca (mix cumbia/reggaeton)",
-        time: new Date("2026-11-14T23:30:00-06:00"),
+        time: new Date("2026-11-14T23:30:00"),
         status: "PENDIENTE",
         notes: "Evitar reggaeton explícito, hay niños en la fiesta",
         order: 3,
@@ -273,7 +273,7 @@ async function main() {
       invitationStatus: g.invitationStatus,
       notes: g.notes,
       checkedIn: g.checkedIn ?? false,
-      checkInTime: g.checkedIn ? new Date("2026-11-14T18:45:00-06:00") : null,
+      checkInTime: g.checkedIn ? new Date("2026-11-14T18:45:00") : null,
     })),
   });
 
@@ -282,7 +282,7 @@ async function main() {
     data: {
       name: "Cena Anual Grupo Nortex",
       type: "CORPORATIVO",
-      date: new Date("2026-12-05T20:00:00-06:00"),
+      date: new Date("2026-12-05T20:00:00"),
       location: "Hotel Camino Real, Salón Azteca",
       hostName: "Grupo Nortex S.A. de C.V.",
       totalBudget: 250000,
