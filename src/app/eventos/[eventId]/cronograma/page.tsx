@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { createScheduleItem } from "@/lib/actions/schedule";
 import { ScheduleTimeline } from "@/components/ScheduleTimeline";
+import { AddPopover } from "@/components/AddPopover";
 import { SubmitButton } from "@/components/SubmitButton";
 
 export default async function SchedulePage({
@@ -28,45 +29,37 @@ export default async function SchedulePage({
           >
             Vista imprimible
           </a>
-          <details className="relative">
-            <summary className="cursor-pointer list-none rounded-md bg-accent px-3.5 py-2 text-sm font-medium text-accent-foreground hover:opacity-90">
-              + Agregar actividad
-            </summary>
-            <form
-              action={createScheduleItemWithEvent}
-              className="absolute right-0 z-10 mt-2 w-80 rounded-xl border border-border bg-surface p-4 shadow-lg"
-            >
-              <div className="flex flex-col gap-2.5">
-                <input
-                  type="datetime-local"
-                  name="time"
-                  required
-                  className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
-                />
-                <input
-                  name="activity"
-                  required
-                  placeholder="Actividad (ej. Ceremonia)"
-                  className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
-                />
-                <input
-                  name="responsible"
-                  placeholder="Responsable (DJ, maestro de ceremonias, staff…)"
-                  className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
-                />
-                <input
-                  type="number"
-                  min="0"
-                  name="durationMinutes"
-                  placeholder="Duración (minutos)"
-                  className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
-                />
-              </div>
-              <div className="mt-3 flex justify-end">
-                <SubmitButton>Agregar</SubmitButton>
-              </div>
-            </form>
-          </details>
+          <AddPopover label="+ Agregar actividad" action={createScheduleItemWithEvent}>
+            <div className="flex flex-col gap-2.5">
+              <input
+                type="datetime-local"
+                name="time"
+                required
+                className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
+              />
+              <input
+                name="activity"
+                required
+                placeholder="Actividad (ej. Ceremonia)"
+                className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
+              />
+              <input
+                name="responsible"
+                placeholder="Responsable (DJ, maestro de ceremonias, staff…)"
+                className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
+              />
+              <input
+                type="number"
+                min="0"
+                name="durationMinutes"
+                placeholder="Duración (minutos)"
+                className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
+              />
+            </div>
+            <div className="mt-3 flex justify-end">
+              <SubmitButton>Agregar</SubmitButton>
+            </div>
+          </AddPopover>
         </div>
       </div>
 

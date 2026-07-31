@@ -3,6 +3,7 @@ import { getEventBudgetSummary } from "@/lib/stats";
 import { serializeVendor } from "@/lib/serialize";
 import { createVendor } from "@/lib/actions/vendors";
 import { VendorTable } from "@/components/VendorTable";
+import { AddPopover } from "@/components/AddPopover";
 import { SubmitButton } from "@/components/SubmitButton";
 import { Pill } from "@/components/Pill";
 import { formatCurrency } from "@/lib/format";
@@ -46,90 +47,82 @@ export default async function VendorsPage({
           >
             Exportar PDF
           </a>
-          <details className="relative">
-            <summary className="cursor-pointer list-none rounded-md bg-accent px-3.5 py-2 text-sm font-medium text-accent-foreground hover:opacity-90">
-              + Agregar proveedor
-            </summary>
-            <form
-              action={createVendorWithEvent}
-              className="absolute right-0 z-10 mt-2 w-80 rounded-xl border border-border bg-surface p-4 shadow-lg"
-            >
-              <div className="flex flex-col gap-2.5">
-                <input
-                  name="name"
-                  required
-                  placeholder="Nombre del proveedor"
-                  className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
-                />
-                <select
-                  name="category"
-                  defaultValue={VendorCategory.CATERING}
-                  className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
-                >
-                  {Object.values(VendorCategory).map((c) => (
-                    <option key={c} value={c}>
-                      {vendorCategoryLabels[c]}
-                    </option>
-                  ))}
-                </select>
-                <input
-                  name="serviceDescription"
-                  placeholder="Servicio contratado"
-                  className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
-                />
-                <input
-                  name="contactName"
-                  placeholder="Contacto"
-                  className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
-                />
-                <input
-                  name="contactPhone"
-                  placeholder="Teléfono"
-                  className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
-                />
-                <div className="grid grid-cols-2 gap-2">
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    name="cost"
-                    placeholder="Costo total"
-                    className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
-                  />
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    name="depositPaid"
-                    placeholder="Anticipo"
-                    className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
-                  />
-                </div>
+          <AddPopover label="+ Agregar proveedor" action={createVendorWithEvent}>
+            <div className="flex flex-col gap-2.5">
+              <input
+                name="name"
+                required
+                placeholder="Nombre del proveedor"
+                className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
+              />
+              <select
+                name="category"
+                defaultValue={VendorCategory.CATERING}
+                className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
+              >
+                {Object.values(VendorCategory).map((c) => (
+                  <option key={c} value={c}>
+                    {vendorCategoryLabels[c]}
+                  </option>
+                ))}
+              </select>
+              <input
+                name="serviceDescription"
+                placeholder="Servicio contratado"
+                className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
+              />
+              <input
+                name="contactName"
+                placeholder="Contacto"
+                className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
+              />
+              <input
+                name="contactPhone"
+                placeholder="Teléfono"
+                className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
+              />
+              <div className="grid grid-cols-2 gap-2">
                 <input
                   type="number"
                   min="0"
                   step="0.01"
-                  name="costPerPerson"
-                  placeholder="Costo por persona (solo catering)"
+                  name="cost"
+                  placeholder="Costo total"
                   className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
                 />
-                <select
-                  name="status"
-                  defaultValue={VendorStatus.COTIZADO}
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  name="depositPaid"
+                  placeholder="Anticipo"
                   className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
-                >
-                  {Object.values(VendorStatus).map((s) => (
-                    <option key={s} value={s}>
-                      {vendorStatusLabels[s]}
-                    </option>
-                  ))}
-                </select>
+                />
               </div>
-              <div className="mt-3 flex justify-end">
-                <SubmitButton>Agregar</SubmitButton>
-              </div>
-            </form>
-          </details>
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                name="costPerPerson"
+                placeholder="Costo por persona (solo catering)"
+                className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
+              />
+              <select
+                name="status"
+                defaultValue={VendorStatus.COTIZADO}
+                className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
+              >
+                {Object.values(VendorStatus).map((s) => (
+                  <option key={s} value={s}>
+                    {vendorStatusLabels[s]}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="mt-3 flex justify-end">
+              <SubmitButton>Agregar</SubmitButton>
+            </div>
+          </AddPopover>
         </div>
       </div>
 

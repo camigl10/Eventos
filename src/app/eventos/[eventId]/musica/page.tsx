@@ -3,6 +3,7 @@ import { getEventOrNotFound } from "@/lib/getEvent";
 import { createMusicItem } from "@/lib/actions/music";
 import { updateDjNotes } from "@/lib/actions/events";
 import { MusicList } from "@/components/MusicList";
+import { AddPopover } from "@/components/AddPopover";
 import { SubmitButton } from "@/components/SubmitButton";
 import { MusicStatus } from "@/generated/prisma/enums";
 import { musicStatusLabels } from "@/lib/labels";
@@ -30,60 +31,52 @@ export default async function MusicPage({
             Momentos musicales, canciones asignadas y notas especiales para el DJ.
           </p>
         </div>
-        <details className="relative">
-          <summary className="cursor-pointer list-none rounded-md bg-accent px-3.5 py-2 text-sm font-medium text-accent-foreground hover:opacity-90">
-            + Agregar canción
-          </summary>
-          <form
-            action={createMusicItemWithEvent}
-            className="absolute right-0 z-10 mt-2 w-80 rounded-xl border border-border bg-surface p-4 shadow-lg"
-          >
-            <div className="flex flex-col gap-2.5">
-              <input
-                name="moment"
-                required
-                placeholder="Momento (ej. Entrada, Baile de novios, Hora loca)"
-                className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
-              />
-              <input
-                name="songName"
-                required
-                placeholder="Canción"
-                className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
-              />
-              <input
-                name="artist"
-                placeholder="Artista"
-                className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
-              />
-              <input
-                type="datetime-local"
-                name="time"
-                className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
-              />
-              <select
-                name="status"
-                defaultValue={MusicStatus.PENDIENTE}
-                className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
-              >
-                {Object.values(MusicStatus).map((s) => (
-                  <option key={s} value={s}>
-                    {musicStatusLabels[s]}
-                  </option>
-                ))}
-              </select>
-              <textarea
-                name="notes"
-                rows={2}
-                placeholder="Notas / pedidos especiales"
-                className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
-              />
-            </div>
-            <div className="mt-3 flex justify-end">
-              <SubmitButton>Agregar</SubmitButton>
-            </div>
-          </form>
-        </details>
+        <AddPopover label="+ Agregar canción" action={createMusicItemWithEvent}>
+          <div className="flex flex-col gap-2.5">
+            <input
+              name="moment"
+              required
+              placeholder="Momento (ej. Entrada, Baile de novios, Hora loca)"
+              className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
+            />
+            <input
+              name="songName"
+              required
+              placeholder="Canción"
+              className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
+            />
+            <input
+              name="artist"
+              placeholder="Artista"
+              className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
+            />
+            <input
+              type="datetime-local"
+              name="time"
+              className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
+            />
+            <select
+              name="status"
+              defaultValue={MusicStatus.PENDIENTE}
+              className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
+            >
+              {Object.values(MusicStatus).map((s) => (
+                <option key={s} value={s}>
+                  {musicStatusLabels[s]}
+                </option>
+              ))}
+            </select>
+            <textarea
+              name="notes"
+              rows={2}
+              placeholder="Notas / pedidos especiales"
+              className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm"
+            />
+          </div>
+          <div className="mt-3 flex justify-end">
+            <SubmitButton>Agregar</SubmitButton>
+          </div>
+        </AddPopover>
       </div>
 
       <MusicList eventId={eventId} items={items} />
