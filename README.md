@@ -18,6 +18,18 @@ Todo cuelga de `Event` mediante `eventId`, así que los datos de un evento nunca
 - **ScheduleItem** (cronograma) — hora, actividad, responsable, duración y orden (para reordenar el itinerario).
 - **MusicItem** (DJ) — momento musical, canción, hora, estado (pendiente/confirmada) y notas especiales.
 
+## Interfaz
+
+- **Dashboard** (`/`) — tarjetas de todos los eventos con invitados confirmados y estado del presupuesto; crear evento nuevo.
+- **Por evento** (`/eventos/[id]/...`):
+  - **Resumen** — estadísticas clave, edición de datos del evento, eliminar evento.
+  - **Invitados** — tabla con búsqueda/filtro, edición inline, importar/exportar CSV.
+  - **Check-in** — vista simple para celular con buscador grande y contadores en vivo.
+  - **Proveedores** — presupuesto automático (suma de proveedores vs. presupuesto total, con alerta), exportar Excel/PDF.
+  - **Menú** — platillos por tiempo, vinculados al proveedor de catering.
+  - **Cronograma** — itinerario arrastrable, vista imprimible.
+  - **DJ / Música** — canciones y momentos musicales, notas generales para el DJ.
+
 ## Empezar
 
 ```bash

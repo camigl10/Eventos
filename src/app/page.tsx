@@ -1,65 +1,110 @@
-import Image from "next/image";
+import { createEvent } from "@/lib/actions/events";
+import { listEventSummaries } from "@/lib/stats";
+import { EventCard } from "@/components/EventCard";
+import { SubmitButton } from "@/components/SubmitButton";
+import { EventType } from "@/generated/prisma/enums";
+import { eventTypeLabels } from "@/lib/labels";
 
-export default function Home() {
+export default async function DashboardPage() {
+  const summaries = await listEventSummaries();
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="mx-auto max-w-6xl px-4 py-8">
+      <div className="relative flex flex-wrap items-start justify-between gap-4 mb-6">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">Tus eventos</h1>
+          <p className="text-foreground/60 text-sm mt-1">
+            Cada evento tiene su propia agenda, invitados, proveedores y presupuesto.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+        <details className="w-full sm:w-auto">
+          <summary className="cursor-pointer list-none rounded-md bg-accent px-4 py-2 text-sm font-medium text-accent-foreground hover:opacity-90">
+            + Nuevo evento
+          </summary>
+          <form
+            action={createEvent}
+            className="mt-3 w-full max-w-md rounded-xl border border-border bg-surface p-5 shadow-sm sm:absolute sm:right-4"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <div className="flex flex-col gap-3">
+              <label className="flex flex-col gap-1 text-sm">
+                Nombre
+                <input
+                  name="name"
+                  required
+                  placeholder="Boda de Ana & Luis"
+                  className="rounded-md border border-border bg-background px-3 py-2 text-sm"
+                />
+              </label>
+              <label className="flex flex-col gap-1 text-sm">
+                Tipo de evento
+                <select
+                  name="type"
+                  required
+                  defaultValue={EventType.BODA}
+                  className="rounded-md border border-border bg-background px-3 py-2 text-sm"
+                >
+                  {Object.values(EventType).map((type) => (
+                    <option key={type} value={type}>
+                      {eventTypeLabels[type]}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="flex flex-col gap-1 text-sm">
+                Fecha y hora
+                <input
+                  type="datetime-local"
+                  name="date"
+                  required
+                  className="rounded-md border border-border bg-background px-3 py-2 text-sm"
+                />
+              </label>
+              <label className="flex flex-col gap-1 text-sm">
+                Lugar
+                <input
+                  name="location"
+                  placeholder="Salón, jardín, hotel…"
+                  className="rounded-md border border-border bg-background px-3 py-2 text-sm"
+                />
+              </label>
+              <label className="flex flex-col gap-1 text-sm">
+                Cliente / anfitrión
+                <input
+                  name="hostName"
+                  placeholder="Nombre del cliente"
+                  className="rounded-md border border-border bg-background px-3 py-2 text-sm"
+                />
+              </label>
+              <label className="flex flex-col gap-1 text-sm">
+                Presupuesto total
+                <input
+                  type="number"
+                  name="totalBudget"
+                  min="0"
+                  step="0.01"
+                  placeholder="180000"
+                  className="rounded-md border border-border bg-background px-3 py-2 text-sm"
+                />
+              </label>
+            </div>
+            <div className="mt-4 flex justify-end">
+              <SubmitButton>Crear evento</SubmitButton>
+            </div>
+          </form>
+        </details>
+      </div>
+
+      {summaries.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-border p-10 text-center text-foreground/60">
+          Todavía no tienes eventos. Crea el primero con el botón de arriba.
         </div>
-      </main>
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {summaries.map((summary) => (
+            <EventCard key={summary.event.id} summary={summary} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
