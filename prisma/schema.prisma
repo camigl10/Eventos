@@ -1,0 +1,185 @@
+// Prisma schema for Eventos: multi-event planner
+// Every child model belongs to exactly one Event and is scoped by eventId,
+// so data never mixes across events.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// ---------- Enums ----------
+
+enum EventType {
+  BODA
+  XV_ANOS
+  CUMPLEANOS
+  CORPORATIVO
+  OTRO
+}
+
+enum InvitationStatus {
+  NO_ENVIADA
+  ENVIADA
+  CONFIRMADA
+  RECHAZADA
+}
+
+enum VendorCategory {
+  CATERING
+  DJ
+  FOTOGRAFIA
+  FLORES
+  SALON
+  MOBILIARIO
+  OTRO
+}
+
+enum VendorStatus {
+  COTIZADO
+  CONTRATADO
+  PAGADO
+}
+
+enum MenuCourse {
+  ENTRADA
+  PLATO_FUERTE
+  POSTRE
+  BEBIDA
+}
+
+enum MusicStatus {
+  PENDIENTE
+  CONFIRMADA
+}
+
+// ---------- Core ----------
+
+/// A single event (boda, XV años, cumpleaños, corporativo, etc). The root of
+/// tenant isolation: every other model hangs off eventId.
+model Event {
+  id          String    @id @default(cuid())
+  name        String
+  type        EventType
+  date        DateTime
+  location    String?
+  hostName    String? // cliente / anfitrión
+  totalBudget Decimal? // presupuesto total contratado por el cliente
+  djNotes     String? // notas generales para el DJ (canciones prohibidas, pedidos del cliente)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  guests        Guest[]
+  vendors       Vendor[]
+  menuItems     MenuItem[]
+  scheduleItems ScheduleItem[]
+  musicItems    MusicItem[]
+
+  @@index([date])
+}
+
+/// An invited guest, scoped to one event.
+model Guest {
+  id               String           @id @default(cuid())
+  eventId          String
+  event            Event            @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  name             String
+  group            String? // grupo o mesa asignada
+  companions       Int              @default(0) // número de acompañantes
+  phone            String?
+  email            String?
+  invitationStatus InvitationStatus @default(NO_ENVIADA)
+  notes            String? // alergias, restricciones alimenticias, niños, etc.
+  checkedIn        Boolean          @default(false)
+  checkInTime      DateTime?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  @@index([eventId])
+  @@index([eventId, invitationStatus])
+  @@index([eventId, checkedIn])
+}
+
+/// A contracted or quoted vendor/supplier for the event.
+model Vendor {
+  id                 String         @id @default(cuid())
+  eventId            String
+  event              Event          @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  category           VendorCategory
+  name               String
+  contactName        String?
+  contactPhone       String?
+  contactEmail       String?
+  serviceDescription String? // servicio contratado
+  cost               Decimal        @default(0) // costo total acordado
+  depositPaid        Decimal        @default(0) // anticipo pagado (saldo pendiente = cost - depositPaid)
+  costPerPerson      Decimal? // solo aplica a catering: costo por invitado, para calcular el total automáticamente
+  status             VendorStatus   @default(COTIZADO)
+  notes              String?
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  menuItems MenuItem[]
+
+  @@index([eventId])
+  @@index([eventId, category])
+}
+
+/// One item of the event menu (entrada, plato fuerte, postre, bebida...).
+model MenuItem {
+  id           String     @id @default(cuid())
+  eventId      String
+  event        Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  course       MenuCourse
+  name         String
+  description  String?
+  isVegetarian Boolean    @default(false)
+  isKidsOption Boolean    @default(false)
+  vendorId     String? // proveedor de catering asociado
+  vendor       Vendor?    @relation(fields: [vendorId], references: [id], onDelete: SetNull)
+  order        Int        @default(0)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([eventId])
+  @@index([eventId, course])
+}
+
+/// A timed activity in the event's itinerary/cronograma.
+model ScheduleItem {
+  id              String   @id @default(cuid())
+  eventId         String
+  event           Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  time            DateTime // hora programada de la actividad
+  activity        String
+  responsible     String? // DJ, maestro de ceremonias, staff, proveedor...
+  durationMinutes Int?
+  order           Int      @default(0) // para reordenar manualmente (drag & drop)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([eventId])
+  @@index([eventId, order])
+}
+
+/// A musical moment or song managed by the DJ.
+model MusicItem {
+  id        String      @id @default(cuid())
+  eventId   String
+  event     Event       @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  moment    String // ej. "Entrada", "Baile de novios", "Hora loca"
+  songName  String
+  artist    String?
+  time      DateTime?
+  status    MusicStatus @default(PENDIENTE)
+  notes     String? // pedidos especiales para esta canción/momento
+  order     Int         @default(0)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@index([eventId])
+  @@index([eventId, order])
+}
