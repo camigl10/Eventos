@@ -37,9 +37,6 @@ yarn-error.log*
 *.db
 *.db-journal
 
-# user-uploaded inventory photos
-/public/uploads
-
 # vercel
 .vercel
 
