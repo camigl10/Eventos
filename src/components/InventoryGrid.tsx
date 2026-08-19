@@ -13,10 +13,10 @@ import { SubmitButton } from "@/components/SubmitButton";
 import { ConfirmSubmit } from "@/components/ConfirmSubmit";
 
 export function InventoryGrid({
-  eventId,
+  feriaId,
   items,
 }: {
-  eventId: string;
+  feriaId: string;
   items: SerializedInventoryItem[];
 }) {
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -35,7 +35,7 @@ export function InventoryGrid({
         editingId === item.id ? (
           <InventoryEditCard
             key={item.id}
-            eventId={eventId}
+            feriaId={feriaId}
             item={item}
             onDone={() => setEditingId(null)}
           />
@@ -74,7 +74,7 @@ export function InventoryGrid({
               {item.notes && <div className="text-xs text-foreground/50">{item.notes}</div>}
 
               <div className="mt-auto flex flex-wrap gap-2 pt-2">
-                <form action={toggleInventorySold.bind(null, eventId, item.id)}>
+                <form action={toggleInventorySold.bind(null, feriaId, item.id)}>
                   <button
                     className={`rounded-md px-2.5 py-1.5 text-xs font-medium ${
                       item.sold
@@ -91,7 +91,7 @@ export function InventoryGrid({
                 >
                   Editar
                 </button>
-                <form action={deleteInventoryItem.bind(null, eventId, item.id)}>
+                <form action={deleteInventoryItem.bind(null, feriaId, item.id)}>
                   <ConfirmSubmit
                     message={`¿Eliminar "${item.name}"?`}
                     className="rounded-md px-2.5 py-1.5 text-xs font-medium text-bad hover:bg-bad-soft"
@@ -109,11 +109,11 @@ export function InventoryGrid({
 }
 
 function InventoryEditCard({
-  eventId,
+  feriaId,
   item,
   onDone,
 }: {
-  eventId: string;
+  feriaId: string;
   item: SerializedInventoryItem;
   onDone: () => void;
 }) {
@@ -121,7 +121,7 @@ function InventoryEditCard({
     <div className="rounded-xl border border-accent/40 bg-accent-soft/30 p-3.5">
       <form
         action={async (formData: FormData) => {
-          await updateInventoryItem(eventId, item.id, formData);
+          await updateInventoryItem(feriaId, item.id, formData);
           onDone();
         }}
         className="flex flex-col gap-2"

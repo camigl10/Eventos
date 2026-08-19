@@ -6,10 +6,9 @@ import { revalidatePath } from "next/cache";
 const MAX_PHOTO_BYTES = 5 * 1024 * 1024; // 5MB
 const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
 
-function revalidateEvent(eventId: string) {
+function revalidateFeria(feriaId: string) {
   revalidatePath("/");
-  revalidatePath(`/eventos/${eventId}`);
-  revalidatePath(`/eventos/${eventId}/inventario`);
+  revalidatePath(`/ferias/${feriaId}`);
 }
 
 /** Reads an uploaded photo into bytes ready to store in the DB, or null if no file was provided. */
@@ -38,16 +37,16 @@ function parseInventoryFields(formData: FormData) {
   return { name, sellerName, price, notes: notes || null };
 }
 
-export async function createInventoryItem(eventId: string, formData: FormData) {
+export async function createInventoryItem(feriaId: string, formData: FormData) {
   const data = parseInventoryFields(formData);
   const photo = await readPhoto(formData.get("photo"));
   await prisma.inventoryItem.create({
-    data: { ...data, photoData: photo?.data, photoMime: photo?.mime, eventId },
+    data: { ...data, photoData: photo?.data, photoMime: photo?.mime, feriaId },
   });
-  revalidateEvent(eventId);
+  revalidateFeria(feriaId);
 }
 
-export async function updateInventoryItem(eventId: string, itemId: string, formData: FormData) {
+export async function updateInventoryItem(feriaId: string, itemId: string, formData: FormData) {
   const data = parseInventoryFields(formData);
   const photo = await readPhoto(formData.get("photo"));
 
@@ -55,19 +54,19 @@ export async function updateInventoryItem(eventId: string, itemId: string, formD
     where: { id: itemId },
     data: { ...data, ...(photo ? { photoData: photo.data, photoMime: photo.mime } : {}) },
   });
-  revalidateEvent(eventId);
+  revalidateFeria(feriaId);
 }
 
-export async function toggleInventorySold(eventId: string, itemId: string) {
+export async function toggleInventorySold(feriaId: string, itemId: string) {
   const item = await prisma.inventoryItem.findUniqueOrThrow({ where: { id: itemId } });
   await prisma.inventoryItem.update({
     where: { id: itemId },
     data: { sold: !item.sold, soldAt: !item.sold ? new Date() : null },
   });
-  revalidateEvent(eventId);
+  revalidateFeria(feriaId);
 }
 
-export async function deleteInventoryItem(eventId: string, itemId: string) {
+export async function deleteInventoryItem(feriaId: string, itemId: string) {
   await prisma.inventoryItem.delete({ where: { id: itemId } });
-  revalidateEvent(eventId);
+  revalidateFeria(feriaId);
 }

@@ -1,28 +1,26 @@
-import { createEvent } from "@/lib/actions/events";
-import { listEventSummaries } from "@/lib/stats";
-import { EventCard } from "@/components/EventCard";
+import { createFeria } from "@/lib/actions/ferias";
+import { listFeriaSummaries } from "@/lib/stats";
+import { FeriaCard } from "@/components/FeriaCard";
 import { SubmitButton } from "@/components/SubmitButton";
-import { EventType } from "@/generated/prisma/enums";
-import { eventTypeLabels } from "@/lib/labels";
 
 export default async function DashboardPage() {
-  const summaries = await listEventSummaries();
+  const summaries = await listFeriaSummaries();
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
       <div className="relative flex flex-wrap items-start justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Tus eventos</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">Tus ferias</h1>
           <p className="text-foreground/60 text-sm mt-1">
-            Cada evento tiene su propia agenda, invitados, proveedores y presupuesto.
+            Cada feria tiene su propio inventario, sin mezclarse con las demás.
           </p>
         </div>
         <details className="w-full sm:w-auto">
           <summary className="cursor-pointer list-none rounded-md bg-accent px-4 py-2 text-sm font-medium text-accent-foreground hover:opacity-90">
-            + Nuevo evento
+            + Nueva feria
           </summary>
           <form
-            action={createEvent}
+            action={createFeria}
             className="mt-3 w-full max-w-md rounded-xl border border-border bg-surface p-5 shadow-sm sm:absolute sm:right-4"
           >
             <div className="flex flex-col gap-3">
@@ -31,24 +29,9 @@ export default async function DashboardPage() {
                 <input
                   name="name"
                   required
-                  placeholder="Boda de Ana & Luis"
+                  placeholder="Feria de Artesanías Otoño"
                   className="rounded-md border border-border bg-background px-3 py-2 text-sm"
                 />
-              </label>
-              <label className="flex flex-col gap-1 text-sm">
-                Tipo de evento
-                <select
-                  name="type"
-                  required
-                  defaultValue={EventType.BODA}
-                  className="rounded-md border border-border bg-background px-3 py-2 text-sm"
-                >
-                  {Object.values(EventType).map((type) => (
-                    <option key={type} value={type}>
-                      {eventTypeLabels[type]}
-                    </option>
-                  ))}
-                </select>
               </label>
               <label className="flex flex-col gap-1 text-sm">
                 Fecha y hora
@@ -63,32 +46,13 @@ export default async function DashboardPage() {
                 Lugar
                 <input
                   name="location"
-                  placeholder="Salón, jardín, hotel…"
-                  className="rounded-md border border-border bg-background px-3 py-2 text-sm"
-                />
-              </label>
-              <label className="flex flex-col gap-1 text-sm">
-                Cliente / anfitrión
-                <input
-                  name="hostName"
-                  placeholder="Nombre del cliente"
-                  className="rounded-md border border-border bg-background px-3 py-2 text-sm"
-                />
-              </label>
-              <label className="flex flex-col gap-1 text-sm">
-                Presupuesto total
-                <input
-                  type="number"
-                  name="totalBudget"
-                  min="0"
-                  step="0.01"
-                  placeholder="180000"
+                  placeholder="Plaza central, club, salón…"
                   className="rounded-md border border-border bg-background px-3 py-2 text-sm"
                 />
               </label>
             </div>
             <div className="mt-4 flex justify-end">
-              <SubmitButton>Crear evento</SubmitButton>
+              <SubmitButton>Crear feria</SubmitButton>
             </div>
           </form>
         </details>
@@ -96,12 +60,12 @@ export default async function DashboardPage() {
 
       {summaries.length === 0 ? (
         <div className="rounded-xl border border-dashed border-border p-10 text-center text-foreground/60">
-          Todavía no tienes eventos. Crea el primero con el botón de arriba.
+          Todavía no tienes ferias. Crea la primera con el botón de arriba.
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {summaries.map((summary) => (
-            <EventCard key={summary.event.id} summary={summary} />
+            <FeriaCard key={summary.feria.id} summary={summary} />
           ))}
         </div>
       )}

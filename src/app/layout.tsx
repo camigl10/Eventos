@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Eventos",
-  description: "Gestión de eventos: invitados, proveedores, presupuesto y cronograma.",
+  title: "Feria Inventario",
+  description: "Inventario de artículos para vender en la feria: foto, precio, vendedora y estado de venta.",
 };
 
 export default function RootLayout({
@@ -32,7 +32,7 @@ export default function RootLayout({
         <header className="no-print border-b border-border bg-surface">
           <div className="mx-auto max-w-6xl px-4 py-3">
             <Link href="/" className="font-semibold tracking-tight text-lg">
-              Eventos
+              Feria Inventario
             </Link>
           </div>
         </header>
