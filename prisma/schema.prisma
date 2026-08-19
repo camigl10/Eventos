@@ -18,6 +18,7 @@ enum EventType {
   XV_ANOS
   CUMPLEANOS
   CORPORATIVO
+  FERIA
   OTRO
 }
 
@@ -72,11 +73,12 @@ model Event {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  guests        Guest[]
-  vendors       Vendor[]
-  menuItems     MenuItem[]
-  scheduleItems ScheduleItem[]
-  musicItems    MusicItem[]
+  guests         Guest[]
+  vendors        Vendor[]
+  menuItems      MenuItem[]
+  scheduleItems  ScheduleItem[]
+  musicItems     MusicItem[]
+  inventoryItems InventoryItem[]
 
   @@index([date])
 }
@@ -163,6 +165,26 @@ model ScheduleItem {
 
   @@index([eventId])
   @@index([eventId, order])
+}
+
+/// An article for sale at a feria/market stall, scoped to one event.
+model InventoryItem {
+  id         String    @id @default(cuid())
+  eventId    String
+  event      Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  name       String
+  photoUrl   String? // ruta a la foto subida (public/uploads)
+  price      Decimal   @default(0)
+  sellerName String // quién lo puso a la venta (una de las chicas)
+  sold       Boolean   @default(false)
+  soldAt     DateTime?
+  notes      String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@index([eventId])
+  @@index([eventId, sold])
+  @@index([eventId, sellerName])
 }
 
 /// A musical moment or song managed by the DJ.

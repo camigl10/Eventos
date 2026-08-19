@@ -12,6 +12,7 @@ export const eventTypeLabels: Record<EventType, string> = {
   XV_ANOS: "XV años",
   CUMPLEANOS: "Cumpleaños",
   CORPORATIVO: "Corporativo",
+  FERIA: "Feria",
   OTRO: "Otro",
 };
 

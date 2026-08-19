@@ -29,7 +29,7 @@ export default async function EventLayout({
           </div>
         </div>
         <div className="mx-auto max-w-6xl">
-          <EventNav eventId={event.id} />
+          <EventNav eventId={event.id} eventType={event.type} />
         </div>
       </div>
       <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-6">{children}</div>
