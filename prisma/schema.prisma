@@ -8,7 +8,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 // ---------- Enums ----------
@@ -173,7 +173,8 @@ model InventoryItem {
   eventId    String
   event      Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
   name       String
-  photoUrl   String? // ruta a la foto subida (public/uploads)
+  photoData  Bytes? // foto guardada en la base de datos (no en disco, para que persista en hosting serverless)
+  photoMime  String? // ej. "image/jpeg"
   price      Decimal   @default(0)
   sellerName String // quién lo puso a la venta (una de las chicas)
   sold       Boolean   @default(false)
