@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { EventType } from "@/generated/prisma/enums";
 
-const tabs = [
+const fullTabs = [
   { href: "", label: "Resumen" },
   { href: "/invitados", label: "Invitados" },
   { href: "/checkin", label: "Check-in" },
@@ -13,9 +14,15 @@ const tabs = [
   { href: "/musica", label: "DJ / Música" },
 ];
 
-export function EventNav({ eventId }: { eventId: string }) {
+const feriaTabs = [
+  { href: "", label: "Resumen" },
+  { href: "/inventario", label: "Inventario" },
+];
+
+export function EventNav({ eventId, eventType }: { eventId: string; eventType: EventType }) {
   const pathname = usePathname();
   const base = `/eventos/${eventId}`;
+  const tabs = eventType === "FERIA" ? feriaTabs : fullTabs;
 
   return (
     <nav className="no-print -mb-px flex gap-1 overflow-x-auto px-4">

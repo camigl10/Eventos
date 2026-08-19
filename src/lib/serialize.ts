@@ -1,4 +1,4 @@
-import type { Vendor } from "@/generated/prisma/client";
+import type { Vendor, InventoryItem } from "@/generated/prisma/client";
 
 /**
  * Prisma's `Decimal` fields can't cross the Server->Client Component boundary as props.
@@ -17,4 +17,10 @@ export function serializeVendor(vendor: Vendor): SerializedVendor {
     depositPaid: Number(vendor.depositPaid),
     costPerPerson: vendor.costPerPerson !== null ? Number(vendor.costPerPerson) : null,
   };
+}
+
+export type SerializedInventoryItem = Omit<InventoryItem, "price"> & { price: number };
+
+export function serializeInventoryItem(item: InventoryItem): SerializedInventoryItem {
+  return { ...item, price: Number(item.price) };
 }

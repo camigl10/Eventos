@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { Pill } from "@/components/Pill";
 import { eventTypeLabels } from "@/lib/labels";
-import { formatDate } from "@/lib/format";
+import { formatDate, formatCurrency } from "@/lib/format";
 import type { listEventSummaries } from "@/lib/stats";
 
 type Summary = Awaited<ReturnType<typeof listEventSummaries>>[number];
 
 export function EventCard({ summary }: { summary: Summary }) {
-  const { event, totalGuests, confirmedGuests, confirmedHeadcount, overBudget, totalBudget } = summary;
+  const { event, totalGuests, confirmedGuests, confirmedHeadcount, overBudget, totalBudget, inventory } = summary;
 
   return (
     <Link
@@ -28,26 +28,52 @@ export function EventCard({ summary }: { summary: Summary }) {
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
-        <div>
-          <span className="font-mono font-semibold tabular-nums">{confirmedGuests}</span>
-          <span className="text-foreground/50"> / {totalGuests} confirmados</span>
-        </div>
-        <div>
-          <span className="font-mono font-semibold tabular-nums">{confirmedHeadcount}</span>
-          <span className="text-foreground/50"> personas esperadas</span>
-        </div>
-      </div>
+      {inventory ? (
+        <>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+            <div>
+              <span className="font-mono font-semibold tabular-nums">{inventory.soldItems}</span>
+              <span className="text-foreground/50"> / {inventory.totalItems} vendidos</span>
+            </div>
+            <div>
+              <span className="font-mono font-semibold tabular-nums">{formatCurrency(inventory.totalRevenue)}</span>
+              <span className="text-foreground/50"> vendido</span>
+            </div>
+          </div>
+          <div>
+            {inventory.totalItems === 0 ? (
+              <Pill tone="neutral">Sin artículos aún</Pill>
+            ) : inventory.availableItems === 0 ? (
+              <Pill tone="good">Todo vendido</Pill>
+            ) : (
+              <Pill tone="neutral">{inventory.availableItems} disponibles</Pill>
+            )}
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+            <div>
+              <span className="font-mono font-semibold tabular-nums">{confirmedGuests}</span>
+              <span className="text-foreground/50"> / {totalGuests} confirmados</span>
+            </div>
+            <div>
+              <span className="font-mono font-semibold tabular-nums">{confirmedHeadcount}</span>
+              <span className="text-foreground/50"> personas esperadas</span>
+            </div>
+          </div>
 
-      <div>
-        {totalBudget === null ? (
-          <Pill tone="neutral">Sin presupuesto definido</Pill>
-        ) : overBudget ? (
-          <Pill tone="bad">Presupuesto excedido</Pill>
-        ) : (
-          <Pill tone="good">Dentro de presupuesto</Pill>
-        )}
-      </div>
+          <div>
+            {totalBudget === null ? (
+              <Pill tone="neutral">Sin presupuesto definido</Pill>
+            ) : overBudget ? (
+              <Pill tone="bad">Presupuesto excedido</Pill>
+            ) : (
+              <Pill tone="good">Dentro de presupuesto</Pill>
+            )}
+          </div>
+        </>
+      )}
     </Link>
   );
 }
